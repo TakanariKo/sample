@@ -1,4 +1,10 @@
-# need 'npm install config'
+# need 'npm install config js-yaml'
+# make config directory and default.yaml
+# add member list in default.yaml. Like below
+# members:
+#  - foo
+#  - bar
+
 module.exports = (robot) ->
   robot.respond /議事録/i, (res) ->
     text = res.envelope.message.text
