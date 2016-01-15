@@ -10,9 +10,13 @@ module.exports = (robot) ->
     text = res.envelope.message.text
     man = pick(exclude(abstract(text, members), members))
     if man == undefined
-      res.send "担当者はいません"
+      resText = "担当者はいません" 
     else
-      res.send "議事録担当は @#{man} さんです。よろしくお願いいたします。"
+      resText = "議事録担当は @#{man} さんです。よろしくお願いいたします。"
+    @exec = require('child_process').exec
+    command = "sh -c 'say #{resText}'"
+    @exec command, (err, stdout, stderr) ->
+      return
 
 config = require('config')
 members = config.get('members')
@@ -33,5 +37,9 @@ exclude = (ex_list, list) ->
 
 # random pick someone
 pick = (list) ->
-  list[Math.floor(Math.random() * list.length)]
+  i = Math.floor(Math.random() * (list.length))
+  if i >= 0 && i < list.length
+    list[i]
+  else
+    undefined
 
