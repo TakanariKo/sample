@@ -1,0 +1,51 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure(2) do |config|
+  config.vm.box = "ubuntu/trusty64"
+  # config.vm.box_url = ""
+  # config.vm.box_check_update = false
+  #
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+ 
+  (1..4).each do |i|
+    config.vm.define vm_hostname = "vm#{i}" do |c|
+      c.vm.hostname = vm_hostname
+      c.vm.network "private_network", ip: "192.168.33.#{20+i}"
+      c.vm.provider "virtualbox" do |vb|
+        vb.gui = false
+        vb.memory = "2048"
+      end
+
+      #c.vm.provision "shell", path: "run.sh"
+      c.vm.provision "shell", inline: <<-SHELL
+        hostnamectl set-hostname #{vm_hostname}
+
+        sudo apt-get update
+        sudo apt-get upgrade -y
+        sudo apt-get install -y unzip curl
+        echo Fetching consul
+        wget https://releases.hashicorp.com/consul/0.6.3/consul_0.6.3_linux_amd64.zip
+        unzip consul_0.6.3_linux_amd64.zip
+        sudo chmod +x consul
+        sudo mv consul /usr/local/bin/
+        sudo mkdir /etc/consul.d
+        sudo chmod a+w /etc/consul.d
+
+        [ ! -f /etc/hosts.bak ] && sudo mv /etc/hosts /etc/hosts.bak
+        echo "192.168.33.21 vm1" >> /etc/hosts
+        echo "192.168.33.22 vm2" >> /etc/hosts
+        echo "192.168.33.23 vm3" >> /etc/hosts
+        echo "192.168.33.24 vm4" >> /etc/hosts
+
+      SHELL
+    end
+  end
+end
