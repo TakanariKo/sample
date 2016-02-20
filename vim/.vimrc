@@ -25,7 +25,7 @@ inoremap <C-k> <Up>
 inoremap <C-h> <Left>
 inoremap <C-l> <Right>
 
-" reposition after parentheses
+" completion parentheses and reposition
 inoremap { {}<Left>
 inoremap [ []<Left>
 inoremap ( ()<Left>
