@@ -18,3 +18,17 @@ set expandtab
 set shiftwidth=2
 set helplang=en
 set clipboard=unnamed
+
+" cursor move in insert mode
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+inoremap <C-h> <Left>
+inoremap <C-l> <Right>
+
+" reposition after parentheses
+inoremap { {}<Left>
+inoremap [ []<Left>
+inoremap ( ()<Left>
+inoremap " ""<Left>
+inoremap ' ''<Left>
+inoremap <> <><Left>
